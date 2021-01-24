@@ -37,7 +37,7 @@ namespace counter_service.Controllers
 
 
             add();
-            return "a post request register seccssufuly ";
+            return "a post request registered successfully ";
         
         
         }
