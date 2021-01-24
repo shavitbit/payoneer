@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
-using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
 
 namespace counter_service.Controllers
 {
@@ -23,24 +18,19 @@ namespace counter_service.Controllers
         private string show()
         {
             return (System.IO.File.ReadAllText("counter.txt"));
-
         }
 
         [HttpGet]
         public string Get()
         {
-
            return show();
         }
+
         [HttpPost]
-        public string Post () {
-
-
+        public string Post () 
+        {
             add();
             return "a post request registered successfully ";
-        
-        
         }
-   
     }
 }
