@@ -1,35 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
+using System;
+using System.Globalization;
+using System.Text;
 
 namespace counter_service.Controllers
 {
-
+    
     [ApiController]
     [Route("[controller]")]
     
     public class thecounter : ControllerBase
     {
-        private void add() 
-        { 
-            int num = int.Parse((System.IO.File.ReadAllText("counter.txt")));
-            num++;
-            string line = num.ToString();
-            System.IO.File.WriteAllText("counter.txt",line);
-        }
-        private string show()
-        {
-            return (System.IO.File.ReadAllText("counter.txt"));
-        }
+       
+        private string connectionString = "amqps://ugqphoka:fceSNdG1qqY5g65S_-RwV2ISfpaKA92H@stingray.rmq.cloudamqp.com/ugqphoka";
+        private string queueName = "counter";
 
-        [HttpGet]
-        public string Get()
+        private uint GetMessageCount()
         {
-           return show();
+            Uri uri = new Uri(connectionString);
+            var factory = new ConnectionFactory() { Uri = uri };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                return channel.MessageCount(queueName);
+            }
+        }
+ 
+        private void send(string msg)
+        {
+            Uri uri = new Uri(connectionString);
+            var factory = new ConnectionFactory() { Uri = uri };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                string message = msg;
+                var body = Encoding.UTF8.GetBytes(message);
+                
+                channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
+            }
+        }
+      
+        [HttpGet]
+        public uint Get()
+        {
+           return GetMessageCount();
         }
 
         [HttpPost]
         public string Post () 
         {
-            add();
+            DateTime dateTime = DateTime.Now;
+            send(dateTime.ToString("MM/dd/yyyy HH:mm:ss.fff", CultureInfo.InvariantCulture));
             return "a post request registered successfully ";
         }
     }

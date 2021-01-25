@@ -27,3 +27,4 @@ C:\repo\payoneer\counter-service\obj\Debug\net5.0\counter-service.dll
 C:\repo\payoneer\counter-service\obj\Debug\net5.0\ref\counter-service.dll
 C:\repo\payoneer\counter-service\obj\Debug\net5.0\counter-service.pdb
 C:\repo\payoneer\counter-service\obj\Debug\net5.0\counter-service.genruntimeconfig.cache
+C:\repo\payoneer\counter-service\bin\Debug\net5.0\RabbitMQ.Client.dll
